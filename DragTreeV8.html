@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag Race Light Tree</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .light-circle {
+            border-radius: 9999px;
+            border: 2px solid #374151;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .light-dull { background-color: #4b5563; }
+        .light-bright-white { background-color: #ffffff; }
+        .light-yellow { background-color: #fcd34d; }
+        .light-green { background-color: #22c55e; }
+        .light-red { background-color: #ef4444; }
+
+        .light-circle-small {
+            width: 40px;
+            height: 40px;
+        }
+        .light-circle-large {
+            width: 80px;
+            height: 80px;
+        }
+
+        #delaySlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #22c55e;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #delaySlider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #22c55e;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 640px) {
+            .light-circle-small {
+                width: 30px;
+                height: 30px;
+            }
+            .light-circle-large {
+                width: 60px;
+                height: 60px;
+            }
+            .text-3xl { font-size: 1.2rem; }
+            .text-xl { font-size: 0.8rem; }
+            #messageLabel {
+                font-size: 0.75rem;
+            }
+            .mb-desktop-title { margin-bottom: 0.5rem; }
+            .mb-desktop-section { margin-bottom: 0.4rem; }
+            .mb-desktop-label { margin-bottom: 0.1rem; }
+            .mb-desktop-message { margin-bottom: 0.75rem; }
+            .space-x-desktop { margin-left: 0.4rem; }
+            .space-y-desktop { margin-top: 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Advertising division -->
+        <div id="adSpace" class="w-full md:w-1/4 p-2 md:p-4 bg-gray-800 order-3 md:order-1">
+            <div class="text-center text-gray-400 mb-2 text-sm md:text-base">Advertisement</div>
+            <div class="bg-gray-700 h-32 md:h-64 flex items-center justify-center text-gray-500 text-sm md:text-base">
+                <div class="ad-content">
+                    <p>Sponsored Content</p>
+                    <p class="text-xs">Your Ad Could Be Here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main game content -->
+        <div class="flex-1 order-2 p-2 md:p-4">
+            <div class="main-container flex flex-col items-center justify-center">
+                <h1 class="text-3xl font-bold mb-desktop-title text-gray-200">Drag Race Light Tree</h1>
+
+                <!-- Pre-Stage Lights -->
+                <div class="flex flex-col items-center mb-desktop-section">
+                    <p class="text-xl font-semibold mb-desktop-label">PRE-STAGE</p>
+                    <div id="preStageLights" class="flex">
+                        <div class="light-circle light-bright-white light-circle-small mr-desktop-section"></div>
+                        <div class="light-circle light-bright-white light-circle-small mr-desktop-section"></div>
+                        <div class="light-circle light-bright-white light-circle-small"></div>
+                    </div>
+                </div>
+
+                <!-- Staged Lights -->
+                <div class="flex flex-col items-center mb-desktop-section">
+                    <p class="text-xl font-semibold mb-desktop-label">STAGED</p>
+                    <div id="stagedLights" class="flex">
+                        <div class="light-circle light-dull light-circle-small mr-desktop-section"></div>
+                        <div class="light-circle light-dull light-circle-small mr-desktop-section"></div>
+                        <div class="light-circle light-dull light-circle-small"></div>
+                    </div>
+                </div>
+
+                <!-- Yellow Lights -->
+                <div class="flex flex-col items-center mb-desktop-section">
+                    <div id="yellowLights" class="flex flex-col">
+                        <div class="light-circle light-dull light-circle-large mb-desktop-section"></div>
+                        <div class="light-circle light-dull light-circle-large mb-desktop-section"></div>
+                        <div class="light-circle light-dull light-circle-large"></div>
+                    </div>
+                </div>
+
+                <!-- Green Light -->
+                <div class="flex flex-col items-center mb-desktop-section">
+                    <div id="greenLight" class="light-circle light-dull light-circle-large"></div>
+                </div>
+
+                <!-- Red Light -->
+                <div class="flex flex-col items-center mb-desktop-section">
+                    <div id="redLight" class="light-circle light-dull light-circle-large"></div>
+                </div>
+
+                <!-- Delay Slider -->
+                <div class="mb-4 w-full max-w-xs">
+                    <label for="delaySlider" class="block text-sm font-medium text-gray-300 mb-1">
+                        Early Launch Window: <span id="delayValue">0.00</span>s
+                    </label>
+                    <input type="range" id="delaySlider" min="-0.9" max="0" step="0.05" value="0"
+                           class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Message Label -->
+                <p id="messageLabel" class="text-xl font-bold mb-desktop-message text-blue-500 whitespace-nowrap">Press and HOLD button to STAGE</p>
+
+                <!-- Control Button -->
+                <button id="controlButton" class="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform active:translate-y-0.5">
+                    Stage / Restart Race
+                </button>
+            </div>
+        </div>
+
+        <!-- Reaction times division -->
+        <div id="reactionTimes" class="w-full md:w-1/4 p-2 md:p-4 bg-gray-800 order-1 md:order-3">
+            <h3 class="text-lg font-bold text-center text-gray-200 mb-2">Reaction Times</h3>
+            <div id="bestTime" class="text-center text-green-400 font-bold mb-4">Best: --</div>
+            <div id="timeList" class="text-sm text-gray-300"></div>
+        </div>
+    </div>
+
+ 
+    <script>
+        // DOM elements
+        const preStageLightElements = document.querySelectorAll('#preStageLights .light-circle');
+        const stagedLightElements = document.querySelectorAll('#stagedLights .light-circle');
+        const yellowLightElements = document.querySelectorAll('#yellowLights .light-circle');
+        const greenLightElement = document.getElementById('greenLight');
+        const redLightElement = document.getElementById('redLight');
+        const messageLabel = document.getElementById('messageLabel');
+        const controlButton = document.getElementById('controlButton');
+        const delaySlider = document.getElementById('delaySlider');
+        const delayValue = document.getElementById('delayValue');
+        const timeList = document.getElementById('timeList');
+        const bestTimeDisplay = document.getElementById('bestTime');
+
+        // Game state
+        let gameState = "PRE_STAGED";
+        let buttonPressTime = 0;
+        let buttonReleaseTime = 0;
+        let greenLightTime = 0;
+        let currentDelay = 0;
+        let attempts = []; // Stores {time: number, valid: boolean}
+        let randomDelayTimerId = null;
+        let yellowTimerIds = [];
+        let greenTimerId = null;
+        const LIGHT_INTERVAL_MS = 400;
+
+        // Helper functions
+        function setLightColor(element, colorName) {
+            element.classList.remove('light-dull', 'light-bright-white', 'light-yellow', 'light-green', 'light-red');
+            element.classList.add(`light-${colorName.replace('_', '-')}`);
+        }
+
+        function resetGame() {
+            clearTimeout(randomDelayTimerId);
+            yellowTimerIds.forEach(timerId => clearTimeout(timerId));
+            clearTimeout(greenTimerId);
+
+            preStageLightElements.forEach(light => setLightColor(light, 'bright_white'));
+            stagedLightElements.forEach(light => setLightColor(light, 'dull'));
+            yellowLightElements.forEach(light => setLightColor(light, 'dull'));
+            setLightColor(greenLightElement, 'dull');
+            setLightColor(redLightElement, 'dull');
+
+            gameState = "PRE_STAGED";
+            buttonPressTime = 0;
+            buttonReleaseTime = 0;
+            greenLightTime = 0;
+
+            messageLabel.textContent = "Press and HOLD button to STAGE";
+            messageLabel.className = "text-xl font-bold mb-desktop-message text-blue-500 whitespace-nowrap";
+            controlButton.textContent = "Stage / Restart Race";
+        }
+
+        function showYellowLight(index) {
+            if (index > 0) setLightColor(yellowLightElements[index - 1], 'dull');
+            setLightColor(yellowLightElements[index], 'yellow');
+        }
+
+        function showGreenLight() {
+            yellowLightElements.forEach(light => setLightColor(light, 'dull'));
+            setLightColor(greenLightElement, 'green');
+            greenLightTime = performance.now();
+            
+            if (gameState === "COUNTDOWN") {
+                gameState = "GREEN_LIGHT";
+                messageLabel.textContent = "GREEN LIGHT!";
+                messageLabel.className = "text-xl font-bold mb-desktop-message text-green-500 whitespace-nowrap";
+            }
+        }
+
+        function startCountdown() {
+            if (gameState === "STAGED") {
+                gameState = "COUNTDOWN";
+                messageLabel.textContent = "GET READY...";
+                messageLabel.className = "text-xl font-bold mb-desktop-message text-yellow-500 whitespace-nowrap";
+                
+                yellowTimerIds[0] = setTimeout(() => showYellowLight(0), LIGHT_INTERVAL_MS);
+                yellowTimerIds[1] = setTimeout(() => showYellowLight(1), LIGHT_INTERVAL_MS * 2);
+                yellowTimerIds[2] = setTimeout(() => showYellowLight(2), LIGHT_INTERVAL_MS * 3);
+                greenTimerId = setTimeout(showGreenLight, LIGHT_INTERVAL_MS * 4);
+            }
+        }
+
+        function recordAttempt(releaseTime) {
+            const timeAfterGreen = (releaseTime - greenLightTime) / 1000;
+            const timeWithDelay = timeAfterGreen + currentDelay;
+            
+            let isValid = false;
+            let resultMessage = "";
+            
+            if (currentDelay === 0) {
+                // With zero delay, any release after green is valid
+                isValid = timeAfterGreen >= 0;
+                resultMessage = isValid ? 
+                    `Reaction: +${timeAfterGreen.toFixed(3)}s` : 
+                    `Too Early: ${(-timeAfterGreen).toFixed(3)}s`;
+            } else {
+                // With delay, release must be after (greenTime - delay)
+                isValid = timeWithDelay >= 0;
+                resultMessage = isValid ? 
+                    `Reaction: +${timeWithDelay.toFixed(3)}s (with ${currentDelay.toFixed(2)}s delay)` :
+                    `Too Early: ${(-timeWithDelay).toFixed(3)}s`;
+            }
+            
+            // Record the attempt
+            attempts.push({
+                time: timeWithDelay,
+                valid: isValid,
+                rawTime: timeAfterGreen
+            });
+            
+            // Update lights and message
+            if (isValid) {
+                setLightColor(greenLightElement, 'green');
+                setLightColor(redLightElement, 'dull');
+                messageLabel.className = "text-xl font-bold mb-desktop-message text-green-500 whitespace-nowrap";
+            } else {
+                setLightColor(redLightElement, 'red');
+                setLightColor(greenLightElement, 'dull');
+                messageLabel.className = "text-xl font-bold mb-desktop-message text-red-500 whitespace-nowrap";
+            }
+            
+            messageLabel.textContent = resultMessage;
+            updateAttemptsDisplay();
+        }
+
+        function updateAttemptsDisplay() {
+            timeList.innerHTML = '';
+            const validAttempts = attempts.filter(a => a.valid);
+            
+            // Display all attempts
+            attempts.forEach((attempt, index) => {
+                const timeItem = document.createElement('div');
+                timeItem.className = `flex justify-between mb-1 ${attempt.valid ? '' : 'text-gray-500'}`;
+                
+                let timeText;
+                if (currentDelay === 0) {
+                    timeText = attempt.rawTime >= 0 ? 
+                        `+${attempt.rawTime.toFixed(3)}s` : 
+                        `-${(-attempt.rawTime).toFixed(3)}s`;
+                } else {
+                    timeText = attempt.time >= 0 ? 
+                        `+${attempt.time.toFixed(3)}s` : 
+                        `-${(-attempt.time).toFixed(3)}s`;
+                }
+                
+                timeItem.innerHTML = `
+                    <span>${attempt.valid ? 'Pass' : 'Fail'} ${index + 1}:</span>
+                    <span>${timeText}</span>
+                `;
+                timeList.appendChild(timeItem);
+            });
+            
+            // Update best time
+            if (validAttempts.length > 0) {
+                const bestAttempt = validAttempts.reduce((best, current) => 
+                    Math.abs(current.time) < Math.abs(best.time) ? current : best
+                );
+                const bestTime = bestAttempt.time >= 0 ? 
+                    `+${bestAttempt.time.toFixed(3)}s` : 
+                    `-${(-bestAttempt.time).toFixed(3)}s`;
+                bestTimeDisplay.textContent = `Best: ${bestTime}`;
+            } else {
+                bestTimeDisplay.textContent = 'Best: --';
+            }
+        }
+
+        function updateDelayValue() {
+            currentDelay = parseFloat(delaySlider.value);
+            delayValue.textContent = currentDelay.toFixed(2);
+        }
+
+        function handleButtonPress(event) {
+            if (event.type === 'touchstart') event.preventDefault();
+
+            if (gameState === "PRE_STAGED") {
+                gameState = "STAGED";
+                stagedLightElements.forEach(light => setLightColor(light, 'bright_white'));
+                buttonPressTime = performance.now();
+                messageLabel.textContent = "Staged. Release to Launch!";
+                messageLabel.className = "text-xl font-bold mb-desktop-message text-orange-500 whitespace-nowrap";
+                controlButton.textContent = "Release to Launch!";
+
+                const randomDelayMs = Math.random() * (2000 - 500) + 500;
+                randomDelayTimerId = setTimeout(startCountdown, randomDelayMs);
+            }
+        }
+
+        function handleButtonRelease(event) {
+            if (event.type === 'touchend') event.preventDefault();
+
+            if (gameState === "FINISHED") {
+                resetGame();
+                return;
+            }
+
+            buttonReleaseTime = performance.now();
+            
+            if (gameState === "STAGED" || gameState === "COUNTDOWN" || gameState === "GREEN_LIGHT") {
+                clearTimeout(randomDelayTimerId);
+                yellowTimerIds.forEach(timerId => clearTimeout(timerId));
+                clearTimeout(greenTimerId);
+                
+                if (greenLightTime > 0) {
+                    // Green light has appeared
+                    recordAttempt(buttonReleaseTime);
+                } else {
+                    // Green light hasn't appeared yet
+                    if (gameState === "COUNTDOWN") {
+                        // Calculate when green would have appeared
+                        const timeSinceCountdownStart = buttonReleaseTime - (buttonPressTime + (yellowTimerIds[0]._idleStart || 0));
+                        const estimatedGreenTime = buttonPressTime + (yellowTimerIds[0]._idleStart || 0) + (LIGHT_INTERVAL_MS * 4);
+                        greenLightTime = estimatedGreenTime;
+                        recordAttempt(buttonReleaseTime);
+                    } else {
+                        // Too early - before countdown even started
+                        setLightColor(redLightElement, 'red');
+                        messageLabel.textContent = "RED LIGHT! Too Early";
+                        messageLabel.className = "text-xl font-bold mb-desktop-message text-red-500 whitespace-nowrap";
+                        attempts.push({
+                            time: 0,
+                            valid: false,
+                            rawTime: 0
+                        });
+                        updateAttemptsDisplay();
+                    }
+                }
+                
+                gameState = "FINISHED";
+                controlButton.textContent = "Restart Race";
+            }
+        }
+
+        // Event listeners
+        controlButton.addEventListener('mousedown', handleButtonPress);
+        controlButton.addEventListener('mouseup', handleButtonRelease);
+        controlButton.addEventListener('touchstart', handleButtonPress);
+        controlButton.addEventListener('touchend', handleButtonRelease);
+        delaySlider.addEventListener('input', updateDelayValue);
+        document.addEventListener('DOMContentLoaded', resetGame);
+    </script>
+</body>
+</html>
